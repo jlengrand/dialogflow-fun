@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - CreateAgent",
+            "request": "launch",
+            "mainClass": "CreateAgent",
+            "projectName": "dialogflow-fun"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DialogFlow",
+            "request": "launch",
+            "mainClass": "DialogFlow",
+            "projectName": "dialogflow-fun"
+        }
+    ]
+}
