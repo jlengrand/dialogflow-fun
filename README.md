@@ -1,5 +1,7 @@
 # DialogFlow fun
 
+[![CircleCI](https://circleci.com/gh/jlengrand/dialogflow-fun.svg?style=svg)](https://circleci.com/gh/jlengrand/dialogflow-fun)
+
 A simple project using dialog flow
 
 - Google Cloud project name : [dialogflow-fun](https://console.cloud.google.com/apis/library?project=dialogflow-fun)
@@ -14,3 +16,5 @@ A simple project using dialog flow
 - [Full library reference](https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/dialogflow/v2/package-summary.html)
 - [Maven dependency](https://search.maven.org/artifact/com.google.cloud/google-cloud-dialogflow/0.114.0-alpha/jar)
 - [Authentication](https://cloud.google.com/docs/authentication/getting-started)
+
+-[Current state of the slides](https://docs.google.com/presentation/d/1MOqI4hZbGXSNjEiItIqCiXfIT8c9jCV77UMBWtftKbM/edit?usp=sharing)

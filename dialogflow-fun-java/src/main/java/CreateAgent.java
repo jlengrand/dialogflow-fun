@@ -7,9 +7,10 @@ import com.google.cloud.dialogflow.v2beta1.ProjectName;
 public class CreateAgent {
 
     private static final String GOOGLE_AUTH_ENV_NAME = "GOOGLE_APPLICATION_CREDENTIALS";
-    private static final String AGENT_NAME = "dialogflow-fun-agent";
-    private static final String AGENT_ID = "ac522b80-e75b-40cd-9493-269fbb4ef634";
-    private static final String ENTITY_TYPE_ID = "Developer";
+    // private static final String AGENT_NAME = "dialogflow-fun-agent";
+    // private static final String AGENT_ID =
+    // "ac522b80-e75b-40cd-9493-269fbb4ef634";
+    // private static final String ENTITY_TYPE_ID = "Developer";
 
     private static EntityCreator entityCreator = new EntityCreator();
 
