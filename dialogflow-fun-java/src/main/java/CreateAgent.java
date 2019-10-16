@@ -1,34 +1,80 @@
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.google.cloud.dialogflow.v2beta1.EntityType;
-import com.google.cloud.dialogflow.v2beta1.EntityTypeName;
 import com.google.cloud.dialogflow.v2beta1.EntityTypesClient;
 import com.google.cloud.dialogflow.v2beta1.ProjectAgentName;
 import com.google.cloud.dialogflow.v2beta1.Agent;
 import com.google.cloud.dialogflow.v2beta1.AgentsClient;
 import com.google.cloud.dialogflow.v2beta1.ProjectName;
 import com.google.cloud.dialogflow.v2beta1.EntityType.Entity;
+import com.google.cloud.dialogflow.v2beta1.EntityType.Kind;
+
+import data.ReadNames;
 
 public class CreateAgent {
 
+    private static final String CONTACT = "contact";
     private static final String GOOGLE_AUTH_ENV_NAME = "GOOGLE_APPLICATION_CREDENTIALS";
     private static final String PROJECT_NAME = "dialogflow-fun";
     private static final String AGENT_NAME = "dialogflow-fun-agent";
     private static final String AGENT_ID = "ac522b80-e75b-40cd-9493-269fbb4ef634";
     private static final String ENTITY_TYPE_ID = "Developer";
 
+    private static ReadNames namesReader = new ReadNames();
+
     public static void main(String[] args) {
+
+        CreateAgent createAgent = new CreateAgent();
 
         if (!googleAuthOk()) {
             System.out.println("Error with Google Authentication. Exiting...");
             System.exit(0);
         }
 
-        getAgentInfo();
-        getEntitiesInfo();
+        deleteAllEntityTypes();
+        createContactEntityType();
 
         System.out.println("Done");
+    }
+
+    public static void deleteAllEntityTypes() {
+
+        try {
+            EntityTypesClient entityTypesClient = EntityTypesClient.create();
+            ProjectAgentName parent = ProjectAgentName.of(PROJECT_NAME);
+
+            for (EntityType entityType : entityTypesClient.listEntityTypes(parent).iterateAll()) {
+                System.out.println("Deleting " + entityType.getDisplayName() + " with name " + entityType.getName());
+                entityTypesClient.deleteEntityType(entityType.getName());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void createContactEntityType() {
+        try {
+            EntityTypesClient entityTypesClient = EntityTypesClient.create();
+            ProjectAgentName parent = ProjectAgentName.of(PROJECT_NAME);
+
+            List<String> names = namesReader.getListOfNames();
+            List<Entity> contactEntities = names.stream().map(n -> Entity.newBuilder().setValue(n).build())
+                    .collect(Collectors.toList());
+
+            EntityType contactEntityType = EntityType.newBuilder().setDisplayName(CONTACT).setKind(Kind.KIND_MAP)
+                    .addAllEntities(contactEntities).build();
+
+            entityTypesClient.createEntityType(parent, contactEntityType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void getEntitiesInfo() {
