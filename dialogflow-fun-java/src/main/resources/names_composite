@@ -1,0 +1,10 @@
+mum
+dad
+my mum
+my dad
+my @sys.person:person
+uncle @sys.person:person 
+aunt @sys.person:person 
+grandma @sys.person:person 
+grandpa @sys.person:person 
+@sys.person:person 
