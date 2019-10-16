@@ -1,6 +1,6 @@
 # DialogFlow fun
 
-[![CircleCI](https://circleci.com/gh/jlengrand/dialogflow-fun.svg?style=svg)](https://circleci.com/gh/jlengrand/dialogflow-fun)
+[![CircleCI](https://circleci.com/gh/jlengrand/dialogflow-fun/tree/master.svg?style=svg)](https://circleci.com/gh/jlengrand/dialogflow-fun/tree/master)
 
 A simple project using dialog flow
 
