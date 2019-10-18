@@ -17,6 +17,6 @@
 
     <modules>
         <module>dialogflow-fun-agent</module>
-        <module>dialogflow-fun-backend</module>
+        <module>dialogflow-fun-api</module>
     </modules>
 </project>
