@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>fr.lengrand</groupId>
-  <artifactId>dialogflow-fun-agentw</artifactId>
+  <artifactId>dialogflow-fun-agent</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <properties>
