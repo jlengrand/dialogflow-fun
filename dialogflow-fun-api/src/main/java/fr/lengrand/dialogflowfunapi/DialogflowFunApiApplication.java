@@ -3,12 +3,15 @@ package fr.lengrand.dialogflowfunapi;
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.Auth;
 import fr.lengrand.dialogflowfunapi.openbankproject.balance.BalanceHandler;
 import fr.lengrand.dialogflowfunapi.openbankproject.balance.data.Balance;
+import fr.lengrand.dialogflowfunapi.openbankproject.paymentrequest.PaymentRequestHandler;
+import fr.lengrand.dialogflowfunapi.openbankproject.paymentrequest.data.PaymentRequest;
 import fr.lengrand.dialogflowfunapi.openbankproject.transactions.TransactionsHandler;
 import fr.lengrand.dialogflowfunapi.openbankproject.transactions.data.Transactions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +29,9 @@ public class DialogflowFunApiApplication {
 
 	@Autowired
 	private BalanceHandler balanceHandler;
+
+	@Autowired
+	private PaymentRequestHandler paymentRequestHandler;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DialogflowFunApiApplication.class, args);
@@ -61,5 +67,10 @@ public class DialogflowFunApiApplication {
 	@GetMapping("/balances")
 	public Balance balances() throws IOException, InterruptedException {
 		return balanceHandler.getBalance();
+	}
+
+	@PostMapping("/payment")
+	public PaymentRequest payment() throws IOException, InterruptedException {
+		return paymentRequestHandler.createPaymentRequest();
 	}
 }
