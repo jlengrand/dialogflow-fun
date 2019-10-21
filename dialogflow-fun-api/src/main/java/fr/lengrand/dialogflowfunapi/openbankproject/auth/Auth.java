@@ -1,5 +1,7 @@
 package fr.lengrand.dialogflowfunapi.openbankproject.auth;
 
+import fr.lengrand.dialogflowfunapi.openbankproject.auth.data.AuthToken;
+import fr.lengrand.dialogflowfunapi.openbankproject.auth.data.OpenBankCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +25,9 @@ public class Auth {
 
     public JSONBodyHandler<AuthToken> jsonBodyHandler = JSONBodyHandler.getHandler(AuthToken.class);
 
-    private Optional<AuthToken> authToken = Optional.empty();
+    private Optional<String> token = Optional.empty();
 
     public void authenticate() throws IOException, InterruptedException {
-        System.out.println("Username is " + credentials.getUsername());
-        System.out.println("Password is " + credentials.getPassword());
-        System.out.println("Key is " + credentials.getKey());
-
-
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .headers("Content-Type", "application/json",
@@ -40,16 +37,16 @@ public class Auth {
                 .build();
 
         HttpResponse<AuthToken> response = client.send(request, jsonBodyHandler); //TODO  : Handle failures.
-        System.out.println(response.body().getToken());
-        authToken = Optional.of(response.body());
+        System.out.println("Authenticated");
+        token = Optional.of(response.body().getToken());
     }
 
     public boolean isAuthenticated() {
-        return authToken.isPresent();
+        return token.isPresent() && token.get() != null;
     }
 
-    public Optional<AuthToken> getAuthToken() {
-        return authToken;
+    public Optional<String> getToken() {
+        return token;
     }
 
     private String createDirectLoginHeader(){
