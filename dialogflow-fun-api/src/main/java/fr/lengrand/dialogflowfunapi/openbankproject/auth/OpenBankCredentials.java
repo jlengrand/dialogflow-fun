@@ -1,4 +1,4 @@
-package fr.lengrand.dialogflowfunapi.openbankproject;
+package fr.lengrand.dialogflowfunapi.openbankproject.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;

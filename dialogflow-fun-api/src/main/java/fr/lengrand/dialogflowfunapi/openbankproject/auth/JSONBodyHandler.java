@@ -1,4 +1,4 @@
-package fr.lengrand.dialogflowfunapi.openbankproject;
+package fr.lengrand.dialogflowfunapi.openbankproject.auth;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;

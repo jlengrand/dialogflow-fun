@@ -1,8 +1,7 @@
 package fr.lengrand.dialogflowfunapi;
 
-import fr.lengrand.dialogflowfunapi.openbankproject.Auth;
+import fr.lengrand.dialogflowfunapi.openbankproject.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
