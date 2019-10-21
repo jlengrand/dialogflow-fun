@@ -1,8 +1,8 @@
-package fr.lengrand.dialogflowfunapi.openbankproject.transactions;
+package fr.lengrand.dialogflowfunapi.openbankproject.balance;
 
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.Auth;
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.JSONBodyHandler;
-import fr.lengrand.dialogflowfunapi.openbankproject.transactions.data.Transactions;
+import fr.lengrand.dialogflowfunapi.openbankproject.balance.data.Balance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,32 +13,31 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @Service
-public class TransactionsHandler {
+public class BalanceHandler {
 
     @Autowired
     private Auth auth;
 
-    public JSONBodyHandler<Transactions> jsonBodyHandler = JSONBodyHandler.getHandler(Transactions.class);
+    public JSONBodyHandler<Balance> jsonBodyHandler = JSONBodyHandler.getHandler(Balance.class);
 
-    public Transactions getTransactions() throws IOException, InterruptedException {
+    public Balance getBalance() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .headers("Content-Type", "application/json",
                         "Authorization", createAuthHeader())
-                .uri(URI.create(createUrl("at02-1465--01", "john_doe"))) // TODO : Convert to DialogFlow names
+                .uri(URI.create(createUrl("at02-1465--01"))) // TODO : Convert to DialogFlow names
                 .build();
 
-        HttpResponse<Transactions> response = client.send(request, jsonBodyHandler); //TODO  : Handle failures.
+        HttpResponse<Balance> response = client.send(request, jsonBodyHandler); //TODO  : Handle failures.
         return response.body();
     }
 
-    private String createUrl(String bank, String user){
-        return "https://psd2-api.openbankproject.com/obp/v4.0.0/my/banks/"+ bank + "/accounts/" + user + "/transactions";
+    private String createUrl(String bank){
+        return "https://psd2-api.openbankproject.com/obp/v4.0.0/banks/" + bank + "/balances";
     }
 
     private String createAuthHeader(){
         return "DirectLogin token=" + this.auth.getToken().get();
     }
+
 }
-
-

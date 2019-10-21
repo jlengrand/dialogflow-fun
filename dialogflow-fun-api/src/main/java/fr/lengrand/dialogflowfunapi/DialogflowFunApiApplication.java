@@ -1,6 +1,8 @@
 package fr.lengrand.dialogflowfunapi;
 
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.Auth;
+import fr.lengrand.dialogflowfunapi.openbankproject.balance.BalanceHandler;
+import fr.lengrand.dialogflowfunapi.openbankproject.balance.data.Balance;
 import fr.lengrand.dialogflowfunapi.openbankproject.transactions.TransactionsHandler;
 import fr.lengrand.dialogflowfunapi.openbankproject.transactions.data.Transactions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class DialogflowFunApiApplication {
 	@Autowired
 	private TransactionsHandler transactionsHandler;
 
+	@Autowired
+	private BalanceHandler balanceHandler;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DialogflowFunApiApplication.class, args);
 	}
@@ -40,6 +45,8 @@ public class DialogflowFunApiApplication {
 		return "hello world!";
 	}
 
+	// TODO : Take inputs from requests
+
 	@GetMapping("/auth")
 	public String auth() throws IOException, InterruptedException {
 		auth.authenticate(); // TODO: Should be done on start!
@@ -51,4 +58,8 @@ public class DialogflowFunApiApplication {
 		return transactionsHandler.getTransactions();
 	}
 
+	@GetMapping("/balances")
+	public Balance balances() throws IOException, InterruptedException {
+		return balanceHandler.getBalance();
+	}
 }
