@@ -1,12 +1,10 @@
 package fr.lengrand.dialogflowfunapi;
 
+import fr.lengrand.dialogflowfunapi.openbankproject.OpenBankClient;
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.Auth;
-import fr.lengrand.dialogflowfunapi.openbankproject.balance.BalanceHandler;
-import fr.lengrand.dialogflowfunapi.openbankproject.balance.data.Balance;
-import fr.lengrand.dialogflowfunapi.openbankproject.paymentrequest.PaymentRequestHandler;
-import fr.lengrand.dialogflowfunapi.openbankproject.paymentrequest.data.PaymentRequest;
-import fr.lengrand.dialogflowfunapi.openbankproject.transactions.TransactionsHandler;
-import fr.lengrand.dialogflowfunapi.openbankproject.transactions.data.Transactions;
+import fr.lengrand.dialogflowfunapi.openbankproject.data.balance.Balance;
+import fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest.PaymentRequest;
+import fr.lengrand.dialogflowfunapi.openbankproject.data.transactions.Transactions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,13 +23,7 @@ public class DialogflowFunApiApplication {
 	private Auth auth;
 
 	@Autowired
-	private TransactionsHandler transactionsHandler;
-
-	@Autowired
-	private BalanceHandler balanceHandler;
-
-	@Autowired
-	private PaymentRequestHandler paymentRequestHandler;
+	private OpenBankClient openBankClient;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DialogflowFunApiApplication.class, args);
@@ -48,29 +40,28 @@ public class DialogflowFunApiApplication {
 
 	@GetMapping("/")
 	public String hello() {
-		return "hello world!";
+		return "hello from your bank API!";
 	}
 
 	// TODO : Take inputs from requests
 
-	@GetMapping("/auth")
+	@GetMapping("/token")
 	public String auth() throws IOException, InterruptedException {
-		auth.authenticate(); // TODO: Should be done on start!
 		return auth.getToken().isPresent()? auth.getToken().get() : "No token!";
 	}
 
 	@GetMapping("/transactions")
 	public Transactions transactions()  throws IOException, InterruptedException {
-		return transactionsHandler.getTransactions();
+		return openBankClient.getTransactions();
 	}
 
 	@GetMapping("/balances")
 	public Balance balances() throws IOException, InterruptedException {
-		return balanceHandler.getBalance();
+		return openBankClient.getBalance();
 	}
 
 	@PostMapping("/payment")
 	public PaymentRequest payment() throws IOException, InterruptedException {
-		return paymentRequestHandler.createPaymentRequest();
+		return openBankClient.createPaymentRequest();
 	}
 }

@@ -1,4 +1,4 @@
-package fr.lengrand.dialogflowfunapi.openbankproject.transactions.data;
+package fr.lengrand.dialogflowfunapi.openbankproject.data.transactions;
 
 public class Transaction {
 

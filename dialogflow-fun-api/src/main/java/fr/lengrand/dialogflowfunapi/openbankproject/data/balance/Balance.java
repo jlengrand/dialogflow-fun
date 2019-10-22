@@ -1,4 +1,4 @@
-package fr.lengrand.dialogflowfunapi.openbankproject.balance.data;
+package fr.lengrand.dialogflowfunapi.openbankproject.data.balance;
 
 import java.util.List;
 

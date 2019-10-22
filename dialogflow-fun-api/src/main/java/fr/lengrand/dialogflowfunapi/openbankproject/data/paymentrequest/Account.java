@@ -1,4 +1,4 @@
-package fr.lengrand.dialogflowfunapi.openbankproject.paymentrequest.data;
+package fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest;
 
 public class Account {
 
