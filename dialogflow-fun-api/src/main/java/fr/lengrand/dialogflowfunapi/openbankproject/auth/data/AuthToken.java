@@ -1,4 +1,4 @@
-package fr.lengrand.dialogflowfunapi.openbankproject.auth;
+package fr.lengrand.dialogflowfunapi.openbankproject.auth.data;
 
 public class AuthToken {
     private String token;

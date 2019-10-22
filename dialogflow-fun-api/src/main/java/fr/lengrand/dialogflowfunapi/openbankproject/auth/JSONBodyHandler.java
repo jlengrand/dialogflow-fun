@@ -10,6 +10,7 @@ import java.net.http.HttpResponse.ResponseInfo;
 import java.util.function.Function;
 
 public class JSONBodyHandler<T> implements HttpResponse.BodyHandler<T> {
+    // TODO : Use Jackson
     private final Jsonb jsonBinder;
     private final Class<T> type;
     private HttpResponse.BodySubscriber<byte[]> byteArraySubscriber;
