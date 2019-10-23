@@ -3,7 +3,7 @@ package fr.lengrand.dialogflowfunapi.openbankproject;
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.JSONBodyHandler;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.balance.Balance;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest.PaymentRequest;
-import fr.lengrand.dialogflowfunapi.openbankproject.data.transactions.Transactions;
+import fr.lengrand.dialogflowfunapi.openbankproject.data.transactions.TransactionsObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class OpenBankClient {
     protected OpenBankHandler openBankHandler;
 
     public JSONBodyHandler<Balance> balanceJSONHandler = JSONBodyHandler.getHandler(Balance.class);
-    public JSONBodyHandler<Transactions> transactionsJSONHandler = JSONBodyHandler.getHandler(Transactions.class);
+    public JSONBodyHandler<TransactionsObject> transactionsJSONHandler = JSONBodyHandler.getHandler(TransactionsObject.class);
     public JSONBodyHandler<PaymentRequest> paymentRequestJSONHandler = JSONBodyHandler.getHandler(PaymentRequest.class);
 
 
@@ -25,7 +25,7 @@ public class OpenBankClient {
                 createBalanceRelativeUrl("at02-1465--01"));
     }
 
-    public Transactions getTransactions() throws IOException, InterruptedException {
+    public TransactionsObject getTransactions() throws IOException, InterruptedException {
         return openBankHandler.get(
                 transactionsJSONHandler,
                 createTransactionsUrl("at02-1465--01", "john_doe") // TODO : Convert to DialogFlow names
