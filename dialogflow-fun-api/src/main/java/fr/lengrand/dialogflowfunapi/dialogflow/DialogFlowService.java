@@ -20,9 +20,15 @@ public class DialogFlowService {
 
     // TODO : Add strong authentication
     public DialogFlowResponse createPaymentRequest(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
+        System.out.println("/////////");
+        System.out.println("Payment request info : ");
+        System.out.println(request.getQueryResult().getParameters().getContact());
+        System.out.println(request.getQueryResult().getParameters().getUnitCurrency().getAmount());
+        System.out.println(request.getQueryResult().getParameters().getUnitCurrency().getCurrency());
+        System.out.println("/////////");
 
         PaymentRequest paymentRequest = openBankClient.createPaymentRequest(UserAccountLookup.getCurrentUserAccount()
-                , new PaymentRequestDetails("at02-1465--01", "bob_de_bouwer", 10, "EUR", "test at " + LocalDateTime.now())); // TODO : Add dynamic user lookup
+                , new PaymentRequestDetails("at02-1465--01", "bob_de_bouwer", request.getQueryResult().getParameters().getUnitCurrency().getAmount(), request.getQueryResult().getParameters().getUnitCurrency().getCurrency(), "test at " + LocalDateTime.now())); // TODO : Add dynamic user lookup
 
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
             new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact()) // TODO: Add reverse lookup
