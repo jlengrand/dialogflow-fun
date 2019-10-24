@@ -1,5 +1,8 @@
 package fr.lengrand.dialogflowfunapi.openbankproject.auth.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthToken {
     private String token;
 

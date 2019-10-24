@@ -43,10 +43,13 @@ public class DialogflowFunApiApplication {
         System.out.println("Received request from Dialog Flow!");
 
         DialogFlowResponse response;
-        switch (request.queryResult.intent.displayName) {
+        switch (request.getQueryResult().getIntent().getDisplayName()) {
             case "last.transaction":
 				response = dialogFlowService.getLastTransactionRequest();
                 break;
+			case "send.money":
+				response = dialogFlowService.createPaymentRequest(request); // TODO : Add are you sure in DialogFlow!
+				break;
             default:
                 response = new DialogFlowResponse("Sorry, I didn't get that. Can you try again? ");
         }

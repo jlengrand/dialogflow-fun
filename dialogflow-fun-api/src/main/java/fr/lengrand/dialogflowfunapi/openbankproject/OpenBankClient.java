@@ -1,6 +1,8 @@
 package fr.lengrand.dialogflowfunapi.openbankproject;
 
+import fr.lengrand.dialogflowfunapi.dialogflow.data.PaymentRequestDetails;
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.JSONBodyHandler;
+import fr.lengrand.dialogflowfunapi.openbankproject.data.BankAccount;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.balance.Balance;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest.PaymentRequest;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.transactions.TransactionsObject;
@@ -19,40 +21,36 @@ public class OpenBankClient {
     public JSONBodyHandler<PaymentRequest> paymentRequestJSONHandler = JSONBodyHandler.getHandler(PaymentRequest.class);
 
 
-    public Balance getBalance() throws IOException, InterruptedException {
+    public Balance getBalance(BankAccount account) throws IOException, InterruptedException {
         return openBankHandler.get(
                 balanceJSONHandler,
-                createBalanceRelativeUrl("at02-1465--01"));
+                createBalanceRelativeUrl(account));
     }
 
-    public TransactionsObject getTransactions() throws IOException, InterruptedException {
+    public TransactionsObject getTransactions(BankAccount account) throws IOException, InterruptedException {
         return openBankHandler.get(
                 transactionsJSONHandler,
-                createTransactionsUrl("at02-1465--01", "john_doe") // TODO : Convert to DialogFlow names
+                createTransactionsUrl(account) // TODO : Convert to DialogFlow names
         );
     }
 
-    public PaymentRequest createPaymentRequest() throws IOException, InterruptedException {
+    public PaymentRequest createPaymentRequest(BankAccount account, PaymentRequestDetails details) throws IOException, InterruptedException {
         return openBankHandler.post(
                 paymentRequestJSONHandler,
-                createPaymentRequestUrl("at02-1465--01", "john_doe"),
-                "{  \"to\":{    \"bank_id\":\"at02-1465--01\",    \"account_id\":\"bob_de_bouwer\"  },  \"value\":{    \"currency\":\"EUR\",    \"amount\":\"10\"  },  \"description\":\"last test\"}"
-        );// TODO : Create Object request
+                createPaymentRequestUrl(account),
+                PaymentRequestDetails.toJSON(details)
+        );
     }
 
 
-    private String createPaymentRequestUrl(String bank, String user){
-        return "/banks/" + bank + "/accounts/" + user  + "/owner/transaction-request-types/SANDBOX_TAN/transaction-requests";
+    private String createPaymentRequestUrl(BankAccount account){
+        return "/banks/" + account.getBankId() + "/accounts/" + account.getUserId()  + "/owner/transaction-request-types/SANDBOX_TAN/transaction-requests";
     }
 
-    private String createTransactionsUrl(String bank, String user){
-        return "/my/banks/"+ bank + "/accounts/" + user + "/transactions";
+    private String createTransactionsUrl(BankAccount account){
+        return "/my/banks/"+ account.getBankId() + "/accounts/" + account.getUserId() + "/transactions";
     }
 
-    private String createBalanceRelativeUrl(String bank){
-        return "/banks/" + bank + "/balances";
-    }
-
-
+    private String createBalanceRelativeUrl(BankAccount account){ return "/banks/" + account.getBankId() + "/balances"; }
 
 }
