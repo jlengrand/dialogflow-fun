@@ -35,15 +35,11 @@ public class OpenBankClient {
     }
 
     public PaymentRequest createPaymentRequest(BankAccount account, PaymentRequestDetails details) throws IOException, InterruptedException {
-        String caca1 = "{  \"to\":{    \"bank_id\":\"at02-1465--01\",    \"account_id\":\"bob_de_bouwer\"  },  \"value\":{    \"currency\":\"EUR\",    \"amount\":\"10\"  },  \"description\":\"last test\"}";
-        String caca2 = PaymentRequestDetails.toJSON(details);
         return openBankHandler.post(
                 paymentRequestJSONHandler,
                 createPaymentRequestUrl(account),
-caca1 + caca2
-//                PaymentRequestDetails.toJSON(details)
-//                "{  \"to\":{    \"bank_id\":\"at02-1465--01\",    \"account_id\":\"bob_de_bouwer\"  },  \"value\":{    \"currency\":\"EUR\",    \"amount\":\"10\"  },  \"description\":\"last test\"}"
-        );// TODO : Create Object request
+                PaymentRequestDetails.toJSON(details)
+        );
     }
 
 
