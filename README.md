@@ -10,6 +10,13 @@ A simple project using dialog flow
 * Create DialogFlow agent coupled to project [dialogflow-fun-agent](https://dialogflow.cloud.google.com/#/agent/ac522b80-e75b-40cd-9493-269fbb4ef634/intents)
 * Create service account and set environment variable.
 
+## Google Resources for me 
+
+- [View logs](https://console.cloud.google.com/logs/viewer?project=dialogflow-fun&minLogLevel=0&expandAll=false&timestamp=2019-10-23T07:50:18.827000000Z&customFacets=&limitCustomFacetWidth=true&dateRangeStart=2019-10-23T06:50:19.080Z&dateRangeEnd=2019-10-23T07:50:19.080Z&interval=PT1H&resource=gae_app%2Fmodule_id%2Fdefault&logName=projects%2Fdialogflow-fun%2Flogs%2Fstdout&logName=projects%2Fdialogflow-fun%2Flogs%2Fstderr&logName=projects%2Fdialogflow-fun%2Flogs%2Fappengine.googleapis.com%252Frequest_log&scrollTimestamp=2019-10-23T07:48:44.904582000Z)
+- [Dialog Flow project](https://dialogflow.cloud.google.com/#/agent/ac522b80-e75b-40cd-9493-269fbb4ef634/intents)
+- [App Engine Dashboard](https://console.cloud.google.com/appengine?project=dialogflow-fun&serviceId=default&duration=PT6H)
+- [The app in the cloud](https://dialogflow-fun.appspot.com/)
+  
 ## Useful references
 
 - [Reference guide](https://cloud.google.com/dialogflow/docs/reference/libraries/java)

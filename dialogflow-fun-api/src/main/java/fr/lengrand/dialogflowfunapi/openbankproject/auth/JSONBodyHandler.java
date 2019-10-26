@@ -1,39 +1,45 @@
 package fr.lengrand.dialogflowfunapi.openbankproject.auth;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import java.io.ByteArrayInputStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodySubscriber;
 import java.net.http.HttpResponse.BodySubscribers;
 import java.net.http.HttpResponse.ResponseInfo;
+import java.nio.charset.Charset;
 import java.util.function.Function;
 
 public class JSONBodyHandler<T> implements HttpResponse.BodyHandler<T> {
-    // TODO : Use Jackson
-    private final Jsonb jsonBinder;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+
     private final Class<T> type;
-    private HttpResponse.BodySubscriber<byte[]> byteArraySubscriber;
+    private HttpResponse.BodySubscriber<String> subscriber;
 
     public static <T> JSONBodyHandler<T>  getHandler(final Class<T> type){
-        return new JSONBodyHandler<>(JsonbBuilder.create(), type);
+        return new JSONBodyHandler<>(type);
     }
 
-    private JSONBodyHandler(Jsonb jsonBinder, Class<T> type){
-        this.jsonBinder = jsonBinder;
+    private JSONBodyHandler(Class<T> type){
         this.type = type;
-        this.byteArraySubscriber = BodySubscribers.ofByteArray();
+        this.subscriber = BodySubscribers.ofString(Charset.defaultCharset());
     }
 
     @Override
     public BodySubscriber<T> apply(ResponseInfo responseInfo) {
-        return HttpResponse.BodySubscribers.mapping(byteArraySubscriber, byteArrayToJSON());
+        return HttpResponse.BodySubscribers.mapping(subscriber, stringToJSON());
     }
 
-    private Function<byte[], T> byteArrayToJSON() {
-        return byteArray -> this.jsonBinder.fromJson(new ByteArrayInputStream(byteArray), this.type);
+    private Function<String, T> stringToJSON() {
+        return byteArray -> {
+            try {
+                return objectMapper.readValue(byteArray, this.type);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        };
     }
-
-
 }
 
