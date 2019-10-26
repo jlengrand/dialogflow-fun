@@ -12,7 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class DialogFlowService {
@@ -39,6 +43,9 @@ public class DialogFlowService {
                         request.getQueryResult().getParameters().getUnitCurrency(),
                         request.getQueryResult().getParameters().getContact() + " at " + LocalDateTime.now()));
 
+        System.out.println(paymentRequest);
+        System.out.println("/////////");
+
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
             new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
             : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
@@ -58,6 +65,11 @@ public class DialogFlowService {
 
     private Optional<Transaction> getLastTransaction() throws IOException, InterruptedException {
         var transactionsObject = openBankClient.getTransactions(UserAccountLookup.getCurrentUserAccount());
-        return transactionsObject.getTransactions().isEmpty() ? Optional.empty() : Optional.of(transactionsObject.getTransactions().get(0));
+
+        if (transactionsObject.getTransactions().isEmpty()) return Optional.empty();
+
+        return transactionsObject.getTransactions().stream()
+                .sorted(Comparator.comparing(t -> t.getDetails().getCompleted(), Comparator.reverseOrder()) )
+                .findFirst();
     }
 }
