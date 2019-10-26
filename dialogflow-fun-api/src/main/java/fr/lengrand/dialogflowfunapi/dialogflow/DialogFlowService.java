@@ -4,6 +4,7 @@ import fr.lengrand.dialogflowfunapi.dialogflow.data.DialogFlowResponse;
 import fr.lengrand.dialogflowfunapi.dialogflow.data.DialogFlowWebHookRequest;
 import fr.lengrand.dialogflowfunapi.dialogflow.data.PaymentRequestDetails;
 import fr.lengrand.dialogflowfunapi.openbankproject.OpenBankClient;
+import fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest.Account;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest.PaymentRequest;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.transactions.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,11 @@ public class DialogFlowService {
         System.out.println("/////////");
 
         PaymentRequest paymentRequest = openBankClient.createPaymentRequest(UserAccountLookup.getCurrentUserAccount()
-                , new PaymentRequestDetails("at02-1465--01", "bob_de_bouwer", request.getQueryResult().getParameters().getUnitCurrency().getAmount(), request.getQueryResult().getParameters().getUnitCurrency().getCurrency(), "test at " + LocalDateTime.now())); // TODO : Add dynamic user lookup
+                , new PaymentRequestDetails(
+                        new Account("at02-1465--01",
+                                "bob_de_bouwer"),
+                        request.getQueryResult().getParameters().getUnitCurrency(),
+                        "test at " + LocalDateTime.now())); // TODO : Add dynamic user lookup
 
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
             new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact()) // TODO: Add reverse lookup
