@@ -13,6 +13,8 @@ import java.io.IOException;
 @Service
 public class OpenBankClient {
 
+    private static final String TRANSACTION_TYPE = "FREE_FORM";
+
     @Autowired
     protected OpenBankHandler openBankHandler;
 
@@ -30,7 +32,7 @@ public class OpenBankClient {
     public TransactionsObject getTransactions(BankAccount account) throws IOException, InterruptedException {
         return openBankHandler.get(
                 transactionsJSONHandler,
-                createTransactionsUrl(account) // TODO : Convert to DialogFlow names
+                createTransactionsUrl(account)
         );
     }
 
@@ -44,7 +46,7 @@ public class OpenBankClient {
 
 
     private String createPaymentRequestUrl(BankAccount account){
-        return "/banks/" + account.getBankId() + "/accounts/" + account.getUserId()  + "/owner/transaction-request-types/SANDBOX_TAN/transaction-requests";
+        return "/banks/" + account.getBankId() + "/accounts/" + account.getUserId()  + "/owner/transaction-request-types/" + TRANSACTION_TYPE + "/transaction-requests";
     }
 
     private String createTransactionsUrl(BankAccount account){

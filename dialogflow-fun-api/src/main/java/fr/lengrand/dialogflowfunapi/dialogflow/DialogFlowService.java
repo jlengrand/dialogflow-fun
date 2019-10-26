@@ -40,7 +40,7 @@ public class DialogFlowService {
                         request.getQueryResult().getParameters().getContact() + " at " + LocalDateTime.now()));
 
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
-            new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact()) // TODO: Add reverse lookup
+            new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
             : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
     }
 
