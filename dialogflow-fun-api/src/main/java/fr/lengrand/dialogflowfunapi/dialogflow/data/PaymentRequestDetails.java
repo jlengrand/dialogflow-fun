@@ -25,6 +25,12 @@ public class PaymentRequestDetails {
         this.amount = new Amount(value, currency);
     }
 
+    public PaymentRequestDetails(Account account, UnitCurrency unitCurrency, String description){
+        this.description = description;
+        this.account = account;
+        this.amount = new Amount(unitCurrency.getAmount(), unitCurrency.getCurrency());
+    }
+
     public static String toJSON(PaymentRequestDetails paymentRequestDetails) throws JsonProcessingException {
         return mapper.writeValueAsString(paymentRequestDetails);
     }
