@@ -29,6 +29,9 @@ public class UserAccountLookup {
 
     public static Optional<BankAccount> getBankAccountFromContact(String contact){
         BankAccount bankAccount = accountsLookup.get(contact.toLowerCase().trim());
+
+        if(bankAccount != null      ) System.out.println("Found " + bankAccount.getBankId()  + " " + bankAccount.getUserId());
+
         return bankAccount == null? Optional.empty() : Optional.of(bankAccount);
     }
 

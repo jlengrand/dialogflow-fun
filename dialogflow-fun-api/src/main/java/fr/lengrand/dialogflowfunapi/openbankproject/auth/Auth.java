@@ -41,6 +41,14 @@ public class Auth {
         token = Optional.of(response.body().getToken());
     }
 
+    public void safeAuthenticate(){
+        try {
+            this.authenticate();
+        } catch (InterruptedException | IOException e) {
+            System.out.println("Error while authenticating");
+        }
+    }
+
     public boolean isAuthenticated() {
         return token.isPresent() && token.get() != null;
     }

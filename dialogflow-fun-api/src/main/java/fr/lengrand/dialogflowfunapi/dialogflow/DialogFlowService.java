@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Service
 public class DialogFlowService {
@@ -41,13 +39,10 @@ public class DialogFlowService {
                 , new PaymentRequestDetails(
                         userAccount.get().toAccount(),
                         request.getQueryResult().getParameters().getUnitCurrency(),
-                        request.getQueryResult().getParameters().getContact() + " at " + LocalDateTime.now()));
-
-        System.out.println(paymentRequest);
-        System.out.println("/////////");
+                        request.getQueryResult().getParameters().getContact() + " at " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
 
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
-            new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
+            new DialogFlowResponse("Created a payment for a value of " + request.getQueryResult().getParameters().getUnitCurrency().getAmount() + request.getQueryResult().getParameters().getUnitCurrency().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
             : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
     }
 
@@ -59,7 +54,7 @@ public class DialogFlowService {
     }
 
     private String createTransactionDialogResponse(Transaction transaction){
-        return "Your last transaction was for " + transaction.getDetails().getDescription() + " with an amount of " + (-transaction.getDetails().getValue().getAmount()) + transaction.getDetails().getValue().getCurrency() + ". Your new balance is " + transaction.getDetails().getNewBalance().getAmount() + transaction.getDetails().getNewBalance().getCurrency();
+        return "Your last transaction was for " + transaction.getDetails().getDescription() + " with an amount of " + (transaction.getDetails().getValue().getAmount()) + transaction.getDetails().getValue().getCurrency() + ". Your new balance is " + transaction.getDetails().getNewBalance().getAmount() + transaction.getDetails().getNewBalance().getCurrency();
 
     }
 
