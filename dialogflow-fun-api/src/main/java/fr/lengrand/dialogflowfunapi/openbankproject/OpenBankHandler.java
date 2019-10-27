@@ -30,8 +30,6 @@ public class OpenBankHandler {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        System.out.println(request.method());
-        System.out.println(request.uri());
         HttpResponse<T> response = HttpClient.newHttpClient().send(request, jsonBodyHandler);
         return response.body();
     }
@@ -43,27 +41,7 @@ public class OpenBankHandler {
                 .uri(URI.create(BASE_URL + relativeUrl))
                 .build();
 
-        System.out.println(request.method());
-        System.out.println(request.uri());
         HttpResponse<T> response = HttpClient.newHttpClient().send(request, jsonBodyHandler);
-        return response.body();
-    }
-
-    public <T> T getExtraHeader(JSONBodyHandler<T> jsonBodyHandler, String relativeUrl, String header, String headerValue) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .headers("Content-Type", "application/json",
-                        "Authorization", createAuthHeader(),
-                        "pragma", "no-cache",
-                        "cache-control", "no-cache",
-                        "cache-control", "no-store",
-                        header, headerValue)
-                .uri(URI.create(BASE_URL + relativeUrl))
-                .build();
-
-        System.out.println(request.method());
-        System.out.println(request.uri());
-        HttpResponse<T> response = HttpClient.newHttpClient().send(request, jsonBodyHandler);
-        System.out.println(response.body());
         return response.body();
     }
 
