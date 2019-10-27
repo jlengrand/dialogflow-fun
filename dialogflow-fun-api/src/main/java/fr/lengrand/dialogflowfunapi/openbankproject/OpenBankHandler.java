@@ -2,6 +2,7 @@ package fr.lengrand.dialogflowfunapi.openbankproject;
 
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.Auth;
 import fr.lengrand.dialogflowfunapi.openbankproject.auth.JSONBodyHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,6 @@ public class OpenBankHandler {
 
     public static final String BASE_URL = "https://psd2-api.openbankproject.com/obp/v4.0.0/";
 
-    private HttpClient client = HttpClient.newHttpClient();
-
     public <T> T post(JSONBodyHandler<T> jsonBodyHandler, String relativeUrl, String body) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .headers("Content-Type", "application/json",
@@ -29,7 +28,7 @@ public class OpenBankHandler {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        HttpResponse<T> response = client.send(request, jsonBodyHandler);
+        HttpResponse<T> response = HttpClient.newHttpClient().send(request, jsonBodyHandler);
         return response.body();
     }
 
@@ -40,7 +39,7 @@ public class OpenBankHandler {
                 .uri(URI.create(BASE_URL + relativeUrl))
                 .build();
 
-        HttpResponse<T> response = client.send(request, jsonBodyHandler);
+        HttpResponse<T> response = HttpClient.newHttpClient().send(request, jsonBodyHandler);
         return response.body();
     }
 

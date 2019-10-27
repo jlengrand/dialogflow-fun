@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Optional;
 
 @Service
@@ -21,13 +23,6 @@ public class DialogFlowService {
 
     // TODO : Add strong authentication
     public DialogFlowResponse createPaymentRequest(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
-        System.out.println("/////////");
-        System.out.println("Payment request info : ");
-        System.out.println(request.getQueryResult().getParameters().getContact());
-        System.out.println(request.getQueryResult().getParameters().getUnitCurrency().getAmount());
-        System.out.println(request.getQueryResult().getParameters().getUnitCurrency().getCurrency());
-        System.out.println("/////////");
-
         Optional<BankAccount> userAccount = UserAccountLookup.getBankAccountFromContact(request.getQueryResult().getParameters().getContact());
 
         if (userAccount.isEmpty())
@@ -37,10 +32,11 @@ public class DialogFlowService {
                 , new PaymentRequestDetails(
                         userAccount.get().toAccount(),
                         request.getQueryResult().getParameters().getUnitCurrency(),
-                        request.getQueryResult().getParameters().getContact() + " at " + LocalDateTime.now()));
+                        request.getQueryResult().getParameters().getContact() + " at " + getCurrentTime())
+        );
 
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
-            new DialogFlowResponse("Created a payment for a value of " + paymentRequest.getDetails().getValue().getAmount() + paymentRequest.getDetails().getValue().getCurrency() + " to " + request.getQueryResult().getParameters().getContact()) // TODO: Add reverse lookup
+            new DialogFlowResponse("Created a payment for a value of " + request.getQueryResult().getParameters().getUnitCurrency().getAmount() + request.getQueryResult().getParameters().getUnitCurrency().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
             : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
     }
 
@@ -52,12 +48,21 @@ public class DialogFlowService {
     }
 
     private String createTransactionDialogResponse(Transaction transaction){
-        return "Your last transaction was for " + transaction.getDetails().getDescription() + " with an amount of " + (-transaction.getDetails().getValue().getAmount()) + transaction.getDetails().getValue().getCurrency() + ". Your new balance is " + transaction.getDetails().getNewBalance().getAmount() + transaction.getDetails().getNewBalance().getCurrency();
+        return "Your last transaction was for " + transaction.getDetails().getDescription() + " with an amount of " + (transaction.getDetails().getValue().getAmount()) + transaction.getDetails().getValue().getCurrency() + ". Your new balance is " + transaction.getDetails().getNewBalance().getAmount() + transaction.getDetails().getNewBalance().getCurrency();
 
     }
 
     private Optional<Transaction> getLastTransaction() throws IOException, InterruptedException {
         var transactionsObject = openBankClient.getTransactions(UserAccountLookup.getCurrentUserAccount());
-        return transactionsObject.getTransactions().isEmpty() ? Optional.empty() : Optional.of(transactionsObject.getTransactions().get(0));
+
+        if (transactionsObject.getTransactions().isEmpty()) return Optional.empty();
+
+        return transactionsObject.getTransactions().stream()
+                .sorted(Comparator.comparing(t -> t.getDetails().getCompleted(), Comparator.reverseOrder()) )
+                .findFirst();
+    }
+
+    private String getCurrentTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd HH:mm"));
     }
 }

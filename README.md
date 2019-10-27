@@ -23,5 +23,6 @@ A simple project using dialog flow
 - [Full library reference](https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/dialogflow/v2/package-summary.html)
 - [Maven dependency](https://search.maven.org/artifact/com.google.cloud/google-cloud-dialogflow/0.114.0-alpha/jar)
 - [Authentication](https://cloud.google.com/docs/authentication/getting-started)
-
--[Current state of the slides](https://docs.google.com/presentation/d/1MOqI4hZbGXSNjEiItIqCiXfIT8c9jCV77UMBWtftKbM/edit?usp=sharing)
+- [Transaction Types](https://github.com/OpenBankProject/OBP-API/wiki/Transaction-Requests)
+ 
+- [Current state of the slides](https://docs.google.com/presentation/d/1MOqI4hZbGXSNjEiItIqCiXfIT8c9jCV77UMBWtftKbM/edit?usp=sharing)

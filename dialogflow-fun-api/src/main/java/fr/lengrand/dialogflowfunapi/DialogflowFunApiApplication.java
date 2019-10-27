@@ -31,11 +31,7 @@ public class DialogflowFunApiApplication {
 
 	@PostConstruct
 	private void init() {
-		try {
-			auth.authenticate();
-		} catch (IOException | InterruptedException e) {
-			System.out.println("Error while authenticating!"); // TODO : Use a logger
-		}
+		auth.safeAuthenticate();
 	}
 
 	@PostMapping(value = "/fulfillment")

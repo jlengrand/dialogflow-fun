@@ -10,47 +10,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.UUID;
+
 @Service
 public class OpenBankClient {
+
+    private static final String TRANSACTION_TYPE = "SANDBOX_TAN";
 
     @Autowired
     protected OpenBankHandler openBankHandler;
 
-    public JSONBodyHandler<Balance> balanceJSONHandler = JSONBodyHandler.getHandler(Balance.class);
-    public JSONBodyHandler<TransactionsObject> transactionsJSONHandler = JSONBodyHandler.getHandler(TransactionsObject.class);
-    public JSONBodyHandler<PaymentRequest> paymentRequestJSONHandler = JSONBodyHandler.getHandler(PaymentRequest.class);
-
-
     public Balance getBalance(BankAccount account) throws IOException, InterruptedException {
         return openBankHandler.get(
-                balanceJSONHandler,
+                JSONBodyHandler.getHandler(Balance.class),
                 createBalanceRelativeUrl(account));
     }
 
     public TransactionsObject getTransactions(BankAccount account) throws IOException, InterruptedException {
         return openBankHandler.get(
-                transactionsJSONHandler,
-                createTransactionsUrl(account) // TODO : Convert to DialogFlow names
+                JSONBodyHandler.getHandler(TransactionsObject.class),
+                createTransactionsUrl(account)
         );
     }
 
     public PaymentRequest createPaymentRequest(BankAccount account, PaymentRequestDetails details) throws IOException, InterruptedException {
         return openBankHandler.post(
-                paymentRequestJSONHandler,
+                JSONBodyHandler.getHandler(PaymentRequest.class),
                 createPaymentRequestUrl(account),
                 PaymentRequestDetails.toJSON(details)
         );
     }
 
-
     private String createPaymentRequestUrl(BankAccount account){
-        return "/banks/" + account.getBankId() + "/accounts/" + account.getUserId()  + "/owner/transaction-request-types/SANDBOX_TAN/transaction-requests";
+        return "/banks/" + account.getBankId() + "/accounts/" + account.getUserId()  + "/owner/transaction-request-types/" + TRANSACTION_TYPE + "/transaction-requests";
     }
 
     private String createTransactionsUrl(BankAccount account){
-        return "/my/banks/"+ account.getBankId() + "/accounts/" + account.getUserId() + "/transactions";
+        return "/my/banks/"+ account.getBankId() + "/accounts/" + account.getUserId() + "/transactions?" + generateRandomString();
     }
 
     private String createBalanceRelativeUrl(BankAccount account){ return "/banks/" + account.getBankId() + "/balances"; }
 
+        private static String generateRandomString(){
+            return UUID.randomUUID().toString();
+    }
 }
