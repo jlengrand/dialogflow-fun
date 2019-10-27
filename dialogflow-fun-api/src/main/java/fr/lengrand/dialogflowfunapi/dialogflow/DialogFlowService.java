@@ -23,13 +23,6 @@ public class DialogFlowService {
 
     // TODO : Add strong authentication
     public DialogFlowResponse createPaymentRequest(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
-        System.out.println("/////////");
-        System.out.println("Payment request info : ");
-        System.out.println(request.getQueryResult().getParameters().getContact());
-        System.out.println(request.getQueryResult().getParameters().getUnitCurrency().getAmount());
-        System.out.println(request.getQueryResult().getParameters().getUnitCurrency().getCurrency());
-        System.out.println("/////////");
-
         Optional<BankAccount> userAccount = UserAccountLookup.getBankAccountFromContact(request.getQueryResult().getParameters().getContact());
 
         if (userAccount.isEmpty())
@@ -39,7 +32,8 @@ public class DialogFlowService {
                 , new PaymentRequestDetails(
                         userAccount.get().toAccount(),
                         request.getQueryResult().getParameters().getUnitCurrency(),
-                        request.getQueryResult().getParameters().getContact() + " at " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+                        request.getQueryResult().getParameters().getContact() + " at " + getCurrentTime())
+        );
 
         return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
             new DialogFlowResponse("Created a payment for a value of " + request.getQueryResult().getParameters().getUnitCurrency().getAmount() + request.getQueryResult().getParameters().getUnitCurrency().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
@@ -66,5 +60,9 @@ public class DialogFlowService {
         return transactionsObject.getTransactions().stream()
                 .sorted(Comparator.comparing(t -> t.getDetails().getCompleted(), Comparator.reverseOrder()) )
                 .findFirst();
+    }
+
+    private String getCurrentTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd HH:mm"));
     }
 }

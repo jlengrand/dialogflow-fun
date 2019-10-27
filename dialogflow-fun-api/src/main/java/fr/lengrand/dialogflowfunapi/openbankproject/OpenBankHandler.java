@@ -20,8 +20,6 @@ public class OpenBankHandler {
 
     public static final String BASE_URL = "https://psd2-api.openbankproject.com/obp/v4.0.0/";
 
-//    private HttpClient client = HttpClient.newHttpClient();
-
     public <T> T post(JSONBodyHandler<T> jsonBodyHandler, String relativeUrl, String body) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .headers("Content-Type", "application/json",
