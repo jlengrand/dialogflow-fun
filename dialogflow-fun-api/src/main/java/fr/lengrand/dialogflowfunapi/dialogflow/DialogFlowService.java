@@ -1,8 +1,6 @@
 package fr.lengrand.dialogflowfunapi.dialogflow;
 
-import fr.lengrand.dialogflowfunapi.dialogflow.data.DialogFlowResponse;
-import fr.lengrand.dialogflowfunapi.dialogflow.data.DialogFlowWebHookRequest;
-import fr.lengrand.dialogflowfunapi.dialogflow.data.PaymentRequestDetails;
+import fr.lengrand.dialogflowfunapi.dialogflow.data.*;
 import fr.lengrand.dialogflowfunapi.openbankproject.OpenBankClient;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.BankAccount;
 import fr.lengrand.dialogflowfunapi.openbankproject.data.paymentrequest.PaymentRequest;
@@ -18,33 +16,28 @@ import java.util.Optional;
 
 @Service
 public class DialogFlowService {
+
     @Autowired
     private OpenBankClient openBankClient;
-
-    // TODO : Add strong authentication
-    public DialogFlowResponse createPaymentRequest(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
-        Optional<BankAccount> userAccount = UserAccountLookup.getBankAccountFromContact(request.getQueryResult().getParameters().getContact());
-
-        if (userAccount.isEmpty())
-            return new DialogFlowResponse("Sorry, We have not found any bank account for " + request.getQueryResult().getParameters().getContact() + ". Cancelling.");
-
-        PaymentRequest paymentRequest = openBankClient.createPaymentRequest(UserAccountLookup.getCurrentUserAccount()
-                , new PaymentRequestDetails(
-                        userAccount.get().toAccount(),
-                        request.getQueryResult().getParameters().getUnitCurrency(),
-                        request.getQueryResult().getParameters().getContact() + " at " + getCurrentTime())
-        );
-
-        return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
-            new DialogFlowResponse("Created a payment for a value of " + request.getQueryResult().getParameters().getUnitCurrency().getAmount() + request.getQueryResult().getParameters().getUnitCurrency().getCurrency() + " to " + request.getQueryResult().getParameters().getContact())
-            : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
-    }
 
     public DialogFlowResponse getLastTransactionRequest() throws IOException, InterruptedException {
         Optional<Transaction> transaction = this.getLastTransaction();
         return transaction.isPresent() ?
                 new DialogFlowResponse(createTransactionDialogResponse(transaction.get()))
                 : new DialogFlowResponse("You appear to have no transactions!");
+    }
+
+    public DialogFlowResponse createPaymentRequest(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
+        DialogFlowParameters parameters = request.getQueryResult().getParameters();
+        return this.createPaymentRequest(parameters.getContact(), parameters.getUnitCurrency());
+    }
+
+    public DialogFlowResponse createPaymentRequestWithFollowUp(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
+        if(request.getQueryResult().getOutputContexts().size() < 1)
+            return new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
+
+        DialogFlowParameters parameters = request.getQueryResult().getOutputContexts().get(0).getParameters();
+        return this.createPaymentRequest(parameters.getContact(), parameters.getUnitCurrency());
     }
 
     private String createTransactionDialogResponse(Transaction transaction){
@@ -60,6 +53,24 @@ public class DialogFlowService {
         return transactionsObject.getTransactions().stream()
                 .sorted(Comparator.comparing(t -> t.getDetails().getCompleted(), Comparator.reverseOrder()) )
                 .findFirst();
+    }
+
+    private DialogFlowResponse createPaymentRequest(String contact, UnitCurrency unitCurrency) throws IOException, InterruptedException {
+        Optional<BankAccount> userAccount = UserAccountLookup.getBankAccountFromContact(contact);
+
+        if (userAccount.isEmpty())
+            return new DialogFlowResponse("Sorry, We have not found any bank account for " + contact + ". Cancelling.");
+
+        PaymentRequest paymentRequest = openBankClient.createPaymentRequest(UserAccountLookup.getCurrentUserAccount()
+                , new PaymentRequestDetails(
+                        userAccount.get().toAccount(),
+                        unitCurrency,
+                        contact + " at " + getCurrentTime())
+        );
+
+        return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
+                new DialogFlowResponse("Created a payment for a value of " + unitCurrency.getAmount() + unitCurrency.getCurrency() + " to " + contact)
+                : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
     }
 
     private String getCurrentTime() {
