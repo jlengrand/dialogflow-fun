@@ -1,2 +1,8 @@
 runtime: java11
 instance_class: F1
+automatic_scaling:
+  min_instances: 1
+env_variables:
+  OPENBANKPROJECT_USERNAME: 'jlengrand'
+  OPENBANKPROJECT_PASSWORD: 'Bnj0VyuI127SN7yjJJYt'
+  OPENBANKPROJECT_CONSUMERKEY: 'c4vkdziyo4xhry4nwir50oblsolo5f1g1k2tdyu2'

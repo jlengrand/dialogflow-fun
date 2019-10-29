@@ -44,7 +44,7 @@ public class DialogflowFunApiApplication {
 				response = dialogFlowService.getLastTransactionRequest();
                 break;
 			case "send.money":
-				response = dialogFlowService.createPaymentRequest(request); // TODO : Add are you sure in DialogFlow!
+				response = dialogFlowService.createPaymentRequest(request);
 				break;
             default:
                 response = new DialogFlowResponse("Sorry, I didn't get that. Can you try again? ");
