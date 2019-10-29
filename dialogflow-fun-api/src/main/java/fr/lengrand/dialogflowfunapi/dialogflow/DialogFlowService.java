@@ -48,7 +48,7 @@ public class DialogFlowService {
     }
 
     private String createTransactionDialogResponse(Transaction transaction){
-        return "Your last transaction was for " + transaction.getDetails().getDescription() + " with an amount of " + (transaction.getDetails().getValue().getAmount()) + transaction.getDetails().getValue().getCurrency() + ". Your new balance is " + transaction.getDetails().getNewBalance().getAmount() + transaction.getDetails().getNewBalance().getCurrency();
+        return "Your last transaction was for " + transaction.getDetails().getDescription() + " with an amount of " + (-transaction.getDetails().getValue().getAmount()) + transaction.getDetails().getValue().getCurrency() + ". Your new balance is " + transaction.getDetails().getNewBalance().getAmount() + transaction.getDetails().getNewBalance().getCurrency();
 
     }
 

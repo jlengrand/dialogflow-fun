@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class ReadNames {
 
-    private static final String NAMES_FILE_LOCATION = "names2";
+    private static final String NAMES_FILE_LOCATION = "names_composite";
 
     public List<String> getListOfNames() throws FileNotFoundException {
 

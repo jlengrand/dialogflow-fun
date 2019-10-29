@@ -12,15 +12,14 @@ import data.ReadNames;
 
 public class EntityCreator {
 
-    private static final String CONTACT_ENTITY_NAME = "names_composite";
-    private static final String PROJECT_NAME = "dialogflow-fun";
+    private static final String CONTACT_ENTITY_NAME = "contact";
 
     private ReadNames namesReader = new ReadNames();
 
     public void createContactEntityType() {
         try {
             EntityTypesClient entityTypesClient = EntityTypesClient.create();
-            ProjectAgentName parent = ProjectAgentName.of(PROJECT_NAME);
+            ProjectAgentName parent = ProjectAgentName.of(CreateAgent.PROJECT_NAME);
 
             List<String> names = namesReader.getListOfNames();
             List<Entity> contactEntities = names.stream().map(n -> Entity.newBuilder().setValue(n).build())
@@ -38,7 +37,7 @@ public class EntityCreator {
 
     public void deleteAllEntityTypes() throws IOException {
         EntityTypesClient entityTypesClient = EntityTypesClient.create();
-        ProjectAgentName parent = ProjectAgentName.of(PROJECT_NAME);
+        ProjectAgentName parent = ProjectAgentName.of(CreateAgent.PROJECT_NAME);
 
         for (EntityType entityType : entityTypesClient.listEntityTypes(parent).iterateAll()) {
             System.out.println("Deleting " + entityType.getDisplayName() + " with name " + entityType.getName());
@@ -54,7 +53,7 @@ public class EntityCreator {
 
         try {
             EntityTypesClient entityTypesClient = EntityTypesClient.create();
-            ProjectAgentName parent = ProjectAgentName.of(PROJECT_NAME);
+            ProjectAgentName parent = ProjectAgentName.of(CreateAgent.PROJECT_NAME);
             for (EntityType entityType : entityTypesClient.listEntityTypes(parent).iterateAll()) {
                 System.out.println(entityType.getDisplayName());
                 List<Entity> entities = entityType.getEntitiesList();
