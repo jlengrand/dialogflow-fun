@@ -46,6 +46,9 @@ public class DialogflowFunApiApplication {
 			case "send.money":
 				response = dialogFlowService.createPaymentRequest(request);
 				break;
+			case "send.money - yes":
+				response = dialogFlowService.createPaymentRequestWithFollowUp(request);
+				break;
             default:
                 response = new DialogFlowResponse("Sorry, I didn't get that. Can you try again? ");
         }
