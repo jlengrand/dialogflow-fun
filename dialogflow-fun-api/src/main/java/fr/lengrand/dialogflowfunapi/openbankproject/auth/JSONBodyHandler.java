@@ -33,9 +33,9 @@ public class JSONBodyHandler<T> implements HttpResponse.BodyHandler<T> {
     }
 
     private Function<String, T> stringToJSON() {
-        return byteArray -> {
+        return string -> {
             try {
-                return objectMapper.readValue(byteArray, this.type);
+                return objectMapper.readValue(string, this.type);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }

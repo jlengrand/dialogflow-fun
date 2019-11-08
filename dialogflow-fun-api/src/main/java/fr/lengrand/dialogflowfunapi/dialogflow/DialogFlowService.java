@@ -22,9 +22,9 @@ public class DialogFlowService {
 
     public DialogFlowResponse getLastTransactionRequest() throws IOException, InterruptedException {
         Optional<Transaction> transaction = this.getLastTransaction();
-        return transaction.isPresent() ?
-                new DialogFlowResponse(createTransactionDialogResponse(transaction.get()))
-                : new DialogFlowResponse("You appear to have no transactions!");
+        return transaction
+                .map(value -> new DialogFlowResponse(createTransactionDialogResponse(value)))
+                .orElseGet(() -> new DialogFlowResponse("You appear to have no transactions!"));
     }
 
     public DialogFlowResponse createPaymentRequest(DialogFlowWebHookRequest request) throws IOException, InterruptedException {
@@ -51,15 +51,14 @@ public class DialogFlowService {
         if (transactionsObject.getTransactions().isEmpty()) return Optional.empty();
 
         return transactionsObject.getTransactions().stream()
-                .sorted(Comparator.comparing(t -> t.getDetails().getCompleted(), Comparator.reverseOrder()) )
-                .findFirst();
+                .max(Comparator.comparing(t -> t.getDetails().getCompleted()));
     }
 
     private DialogFlowResponse createPaymentRequest(String contact, UnitCurrency unitCurrency) throws IOException, InterruptedException {
         Optional<BankAccount> userAccount = UserAccountLookup.getBankAccountFromContact(contact);
 
         if (userAccount.isEmpty())
-            return new DialogFlowResponse("Sorry, We have not found any bank account for " + contact + ". Cancelling.");
+            return new DialogFlowResponse("Sorry, We have not found any bank account for " + contact + ". Cancelling the payment request.");
 
         PaymentRequest paymentRequest = openBankClient.createPaymentRequest(UserAccountLookup.getCurrentUserAccount()
                 , new PaymentRequestDetails(
@@ -68,9 +67,10 @@ public class DialogFlowService {
                         contact + " at " + getCurrentTime())
         );
 
-        return paymentRequest.getStatus().equalsIgnoreCase("completed") ?
-                new DialogFlowResponse("Created a payment for a value of " + unitCurrency.getAmount() + unitCurrency.getCurrency() + " to " + contact)
-                : new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later!");
+        if (paymentRequest == null || paymentRequest.getStatus() == null || paymentRequest.getStatus().equalsIgnoreCase("completed"))
+            return new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later! Make sure to use your bank account's currency!");
+
+        return new DialogFlowResponse("Created a payment for a value of " + unitCurrency.getAmount() + unitCurrency.getCurrency() + " to " + contact);
     }
 
     private String getCurrentTime() {
