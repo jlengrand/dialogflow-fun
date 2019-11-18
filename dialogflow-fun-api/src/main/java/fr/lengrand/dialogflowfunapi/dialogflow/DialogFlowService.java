@@ -67,7 +67,7 @@ public class DialogFlowService {
                         contact + " at " + getCurrentTime())
         );
 
-        if (paymentRequest == null || paymentRequest.getStatus() == null || paymentRequest.getStatus().equalsIgnoreCase("completed"))
+        if (paymentRequest == null || paymentRequest.getStatus() == null || !paymentRequest.getStatus().equalsIgnoreCase("completed"))
             return new DialogFlowResponse("Sorry, the creation of the payment failed. Please try again later! Make sure to use your bank account's currency!");
 
         return new DialogFlowResponse("Created a payment for a value of " + unitCurrency.getAmount() + unitCurrency.getCurrency() + " to " + contact);
