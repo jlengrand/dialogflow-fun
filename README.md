@@ -36,6 +36,17 @@ The project is composed of several modules.
 - [Maven dependency](https://search.maven.org/artifact/com.google.cloud/google-cloud-dialogflow/0.114.0-alpha/jar)
 - [Authentication](https://cloud.google.com/docs/authentication/getting-started)
 - [Transaction Types](https://github.com/OpenBankProject/OBP-API/wiki/Transaction-Requests)
+
+## Missing information
+
+If you want to run the code yourself, you'll need to have an *OpenBankProject* account and update the `dialogflow-fun-api/src/main/appengine/app.yaml` file to contain the following (with updated values): 
+
+```
+env_variables:
+  OPENBANKPROJECT_USERNAME: 'yourUsername'
+  OPENBANKPROJECT_PASSWORD: 'Bnj0VyuI127SN7yjwfwfet'
+  OPENBANKPROJECT_CONSUMERKEY: 'c4vkdziyokjfhwekfjhwek50oblsolo5f1g1k2tdyu2'
+```
  
 ## Google Resources (for me to remember before the talk)
 
